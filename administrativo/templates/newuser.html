@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {% load static %}
+    <link rel="icon" href="{% static 'images/img_logo/logo-ico.ico' %}">
+    <title>Nova conta</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com.br/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signin.css' %}">
+  </head>
+  <body class="text-center">
+    <form class="form-signin" method="post">
+      {% csrf_token %} <!-- csrf token para segurença basica-->
+      <img class="mb-4" src="{% static 'images/img_logo/logo.png' %}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Criar nova conta</h1>
+      <label for="name" class="sr-only">Nome</label>
+      <input type="text" id="name" name="name" class="form-control" placeholder="Nome" required autofocus>
+      <label for="mail" class="sr-only">E-mail</label>
+      <input type="email" id="mail" name="mail" class="form-control" placeholder="E-mail" required>
+      <label for="user" class="sr-only">Usuário</label>
+      <input type="text" id="user" name="user" class="form-control" placeholder="Usuário" required>
+      <label for="passwd" class="sr-only">Senha</label>
+      <input type="password" id="passwd" name="passwd" class="form-control" placeholder="Senha" minlength="3" required>
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Criar</button>
+      <div class="">
+        <p><a href="../login/">Login</a>&ensp;-&ensp;<a href="../">Home</a></p>
+      </div>
+      {% if mensagem %}
+      <div class="">
+        <p class="">{{ mensagem }}</p>
+      </div>
+      {% endif %}
+      <p class="mt-5 mb-3 text-muted">&copy; 2020-2022</p>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {% load static %}
+    <link rel="icon" href="{% static 'images/img_logo/logo-ico.ico' %}">
+    <title>Login</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com.br/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signin.css' %}">
+  </head>
+  <body class="text-center">
+    <form class="form-signin" method="post">
+      {% csrf_token %} <!-- csrf token para segurença basica-->
+      <img class="mb-4" src="{% static 'images/img_logo/logo.png' %}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Administração da lanchonete</h1>
+      <label for="username" class="sr-only">Usuário</label>
+      <input type="text" id="username" name="username" class="form-control" placeholder="Usuário" required autofocus>
+      <label for="password" class="sr-only">Senha</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Senha" required>
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+      <div class="">
+        <p><a href="../newuser/">Criar conta</a>&ensp;-&ensp;<a href="../">Home</a></p>
+      </div>
+      {% if mensagem_erro %}
+      <div class="">
+        <p class="">{{ mensagem_erro }}</p>
+      </div>
+      {% endif %}
+      <p class="mt-5 mb-3 text-muted">&copy; 2020-2022</p>
+    </form>
+  </body>
+</html>

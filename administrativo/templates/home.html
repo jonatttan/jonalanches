@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {% load static %}
+    <link rel="icon" href="{% static 'images/img_logo/logo-ico.ico' %}">
+
+    <title>Lanchonete - Produtos</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com.br/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/album.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/administrativo.css' %}" type="text/css" rel="stylesheet">
+    <!-- <link href="{% static 'css/galery.css' %}" type="text/css" rel="stylesheet"> -->
+  </head>
+
+  <body>
+
+    <header>
+      <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand mr-auto mr-lg-0 titulo" href="/">Lanchonete</a>
+  
+        <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+          <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="../lojas/">Lojas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../produtos/">Produtos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../promocoes/">Promoções</a>
+          </ul>
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{user.get_username}}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <a class="dropdown-item" href="../favoritos/">Favoritos</a>
+                <a class="dropdown-item" href="logout/">Logout</a>
+                {% if grupo in user.groups.all %}
+                <a class="dropdown-item" href="../administrativo/">ADM</a>
+                {% endif %}
+              </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="newuser/">Criar conta</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="login/">Login</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <!-- Fim do Menu-->
+
+    <!-- Início do corpo -->
+    <main role="main">
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">Bem vindo!</h1>
+          <p class="lead text-muted">Teria um slogan, mas a fome matou a criatividade.</p>
+        </div>
+
+
+
+      </section>
+
+
+      <div class="album py-5 bg-light">
+        <div class="container">
+          <div class="row"> 
+            {% for promocao in promoDestaque %}
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="divImgAlbum">
+                  <a href="{{promocao.produto.imagem}}" target="_blank"><img class="card-img-top imgAlbum" src="{{promocao.produto.imagem}}" alt="Imagem do produto {{promocao.produto}}."></a>
+                </div>
+                <div class="card-body">
+                  <p class="card-text"><b>Produto: </b>{{ promocao.produto.nome }} </p>
+                  <p class="card-text"><b>Categoria: </b>{{promocao.produto.categoria}}</p>
+                  <p class="card-text"><b>Valor: </b>R${{promocao.preco}}</p>
+                  <p><b>Cupom:</b><span class="promoCupom upper" style="left: 80px; max-width: 75px;">{{ promocao.cupom }}</span></p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#{{ promocao.id }}">Detalhes</button>
+                    </div>
+                    <small class="text-muted">Ref. promo: {{ promocao.id }}</small>
+  
+                    <!-- Início do Modal -->
+                    <div class="modal fade" id="{{ promocao.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Detalhes da promoção</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <h6><b>Produto: </b>{{ promocao.produto }}<small> (Ref. promo: {{ promocao.id }})</small></h6><br />
+                            <p><b>Descrição: </b>{{promocao.produto.descricao}}</p>
+                            <p><b>Loja: </b>{{ promocao.loja }} ({{ promocao.loja.cidade }}/{{ promocao.loja.uf }})</p>
+                            <p><b>Valor: </b>R${{ promocao.preco }}</p>
+                            <p><b>Cupom: </b><span class="promoCupom upper" style="left: 80px; width: 15%;">{{ promocao.cupom }}</span></p>
+                          </div>
+                          <img src="{{promocao.produto.imagem}}" class="imgAlbum" width="50%" height="50%"/>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <!-- Talvez usar para favoritar <button type="button" class="btn btn-primary">Save changes</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--Fim do Modal-->                  
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            {% for produto in produtos %}
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="divImgAlbum">
+                  <a href="{{produto.imagem}}" target="_blank"><img class="card-img-top imgAlbum" src="{{produto.imagem}}" alt="Imagem do produto {{produto.nome}}."></a>
+                </div>
+                <div class="card-body">
+                  <p class="card-text"><b>Produto:</b> {{ produto.nome }} </p>
+                  <p class="card-text"><b>Categoria:</b> {{produto.categoria}}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#l{{ produto.id }}">Detalhes</button>
+                    </div>
+                    <small class="text-muted">ref:{{ produto.id }}</small>
+
+                    <!-- Início do Modal -->
+                    <div class="modal fade" id="l{{ produto.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Detalhes do produto</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <h6><b>Nome: </b>{{ produto.nome }}</h6><br />
+                            <p><b>Categoria: </b>{{ produto.categoria }}</p>
+                            <p><b>Descrição: </b>{{ produto.descricao }}</p>
+                          </div>
+                          <img src="{{produto.imagem}}" class="imgAlbum" width="50%" height="50%"/>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <!-- Talvez usar para favoritar <button type="button" class="btn btn-primary">Save changes</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--Fim do Modal-->                  
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <div class="col-md-4">
+              <a href="../produtos/">
+                <div class="card mb-4 shadow-sm">
+                  <img class="card-img-top" src="https://www.vashos.com.br/produtos/fornecedores/logo-vejamais-produtos.png" alt="Card image cap">
+                  <div class="card-body">
+                    <p class="card-text">
+                      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-11.5.5a.5.5 0 0 1 0-1h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"/>
+                    </svg>
+                  </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                     
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>      
+    </main>
+
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-up-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+            </svg>
+          </a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com.br/dist/js/bootstrap.min.js"></script>
+    <script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/holder.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+</html>

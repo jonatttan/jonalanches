@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {% load static %}
+    <link rel="icon" href="{% static 'images/img_logo/logo-ico.ico' %}">
+
+    <title>Lanchonete - Lojas</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com.br/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/album.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/administrativo.css' %}" type="text/css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand mr-auto mr-lg-0 titulo" href="/">Lanchonete</a>
+  
+        <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+          <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="../lojas/">Lojas <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../produtos/">Produtos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../promocoes/">Promoções</a>
+          </ul>
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{user.get_username}}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <a class="dropdown-item" href="../favoritos/">Favoritos</a>
+                <a class="dropdown-item" href="../logout/">Logout</a>
+                {% if grupo in user.groups.all %}
+                <a class="dropdown-item" href="../administrativo/">ADM</a>
+                {% endif %}
+              </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="../newuser/">Criar conta</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../login/">Login</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <!-- Fim do Menu-->
+
+    <!-- Início do corpo -->
+    <main role="main">
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">Lojas da franquia</h1>
+          <p class="lead text-muted">Encontre a mais próxima de você.</p>
+        </div>
+
+        <!-- Filtros início -->
+        <div class="menuFiltros">
+          <form action="" method="post">
+            {% csrf_token %} <!-- csrf token para segurença basica-->
+            <input type="text" class="input3" name="nomeLoja" id="nomeLoja" placeholder="Nome" />
+          
+            <div>
+              
+              <select id="cidadeLoja" class="input2" name="cidadeLoja">
+                  <option class="disabled" value="">Cidade</option>
+                  {% for loja in lojas %}
+                      <option class="" value="{{ loja.cidade }}" name="{{ loja.cidade }}">{{ loja.cidade }}</option>
+                  {% endfor %}
+
+              </select>
+            </div>
+            
+            <div>
+              <select id="ufLoja" class="input1" name="ufLoja">
+                  <option class="disabled" value="">Estado</option>
+                  {% for loja in lojas %}
+                      <option class="" value="{{ loja.uf }}" name="{{ loja.uf }}">{{ loja.uf }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+            <div class="divButton campos">
+              <button name="filtraLojas">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                  <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- Filtros fim -->
+
+      </section>
+
+      <div class="album py-5 bg-light">
+        <div class="container">
+          <div class="row"> 
+            {% for loja in lojasFiltradas %}
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <img class="card-img-top imgAlbum" src="{% static 'images/img_lojas/loja_bk0102.png' %}" alt="{{loja.cidade}}">
+                <div class="card-body">
+                  <p class="card-text">{{loja.nome}}</p>
+                  <p class="card-text">{{loja.cidade}}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#{{loja.id}}">Detalhes</button>
+                    </div>
+                    <small class="text-muted">{{loja.id}}</small>
+
+                    <!-- Início do Modal -->
+                    <div class="modal fade" id="{{loja.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Detalhes da loja</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <h6><b>Loja: </b>{{ loja.nome }}<small> (ref: {{loja.id}})</small></h6><br />
+                            <p><b>Cidade: </b>{{loja.cidade}}</p>
+                            <p><b>Estado: </b>{{ loja.uf }}</p>
+                            <p><b>E-mail: </b>{{ loja.email }}</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <!-- Talvez usar para favoritar <button type="button" class="btn btn-primary">Save changes</button> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--Fim do Modal-->  
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-up-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+            </svg>
+          </a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com.br/dist/js/bootstrap.min.js"></script>
+    <script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/holder.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+</html>

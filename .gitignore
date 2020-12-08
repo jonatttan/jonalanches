@@ -1,0 +1,7 @@
+__pycache__
+*.cnf
+settings_postgre.py
+migrations
+/venv db.sqlite3
+mysql.cnf
+pssql.cnf

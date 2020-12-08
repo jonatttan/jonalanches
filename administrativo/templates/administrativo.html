@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {% load static %}
+    <link rel="icon" href="{% static 'images/img_logo/logo-ico.ico' %}">
+
+    <title>Lanchonete</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com.br/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/administrativo.css' %}" type="text/css" rel="stylesheet">
+    <!--Verificar esse CSS, está infuenciando no outro-->
+    <link href="{% static 'css/formularios.css' %}" type="text/css" rel="stylesheet">
+  </head>
+
+  <body class="bg-light">
+
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+      <a class="navbar-brand mr-auto mr-lg-0 titulo" href="/">Lanchonete</a>
+
+      <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+        <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../lojas/">Lojas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../produtos/">Produtos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../promocoes/">Promoções</a>
+        </ul>
+        <ul class="navbar-nav">
+          {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{user.get_username}}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="../favoritos">Favoritos</a>
+              <a class="dropdown-item" href="../logout/">Logout</a>
+              {% if grupo in user.groups.all %}
+              <a class="dropdown-item" href="../administrativo/">ADM</a>
+              {% endif %}
+            </div>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="../newuser/">Criar conta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../login/">Login</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <main role="main" class="container">
+      
+      <!--Lojas-->
+
+      <div class="lojasLeft">
+        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+          <img class="mr-3 imageHeadList" src="{% static 'images/img_logo/logo.png' %}" alt="">
+          <div class="lh-100">
+            <h6 class="mb-0 text-white lh-100">Lojas</h6>
+            <small>...</small>
+          </div>
+        </div>
+        {% if perms.administrativo.add_loja %}
+        <!-- Formulário -->
+        <div class="cadastro shadow-sm">
+          <form action="" method="post">
+            {% csrf_token %} <!-- csrf token para segurença basica-->
+
+            <div class="inputContainer">
+                <input type="text" id="nomeLoja" class="taskName campos" placeholder="Nome" name="nomeLoja" required>
+                <label for="nomeLoja">Nome da Loja</label>
+            </div>
+
+            <div class="inputContainer half">
+              <input type="text" id="cidadeLoja" class="taskName campos" placeholder="Cidade" name="cidadeLoja" required>
+              <label for="cidadeLoja">Cidade da Loja</label>
+            </div>
+
+            <div class="inputContainer hal right">
+              <input type="text" id="estadoLoja" class="taskName campos" placeholder="UF" name="estadoLoja" maxlength="2" style="text-transform:uppercase" required>
+              <label for="estadoLoja">Estado da Loja</label>
+            </div>
+
+            <div class="inputContainer last">
+              <input type="text" id="emailLoja" class="taskName campos" placeholder="E-mail" name="emailLoja" required>
+              <label for="emailLoja">E-mail da Loja</label>
+            </div>
+
+            <div class="row">
+                <button class="taskAdd" name="taskAddLoja" type="submit"><i class="fa fa-plus icon"></i>Add</button>
+            </div>
+          </form>
+        </div>
+        <!-- Formulário -->
+        {% endif %}
+
+        
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+          <h6 class="border-bottom border-gray pb-2 mb-0">Lojas cadastradas</h6>
+          <form action="" method="post">
+            {% csrf_token %} <!-- csrf token para segurença basica-->
+            {% if perms.administrativo.delete_loja %}
+            <button class="taskDelete" name="taskDeleteLoja" type="submit" formnovalidate="" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Excluir</button>
+            {% endif %}
+            {% for loja in lojas %}
+            <div class="media text-muted pt-3">
+              {% if perms.administrativo.delete_loja %}
+              <input type="checkbox" class="taskCheckbox" name="checkedbox" id="{{ loja.id }}" value="{{ loja.id }}" required>
+              {% endif %}
+              <img src="{% static 'images/img_lojas/loja_bk0102.png' %}" alt={{loja.cidade}} class="mr-2 rounded imageList">
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark"><label for="{{ loja.id }}">{{ loja.id }} - {{ loja.nome }}</label></strong>
+                <strong class="taskDate">Cidade: </strong><i class="">{{ loja.cidade }}</i></br>
+                <strong class="taskDate">Estado: </strong><i class="">{{ loja.uf }}</i></br>
+                <strong class="taskDate">E-mail: </strong><i class="">{{ loja.email }}</i></br>
+              </p>
+            </div>
+            {% endfor %}
+            {% if perms.administrativo.delete_loja %}
+            <button class="taskDelete" name="taskDeleteLoja" type="submit" formnovalidate="" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Excluir</button>
+            {% endif %}
+          </form>
+          <small class="d-block text-right mt-3">
+            <!-- <a href="#">All updates</a> -->
+          </small>
+        </div>
+      </div>
+
+      <!--Produtos-->
+      <div class="promocoesCenter">
+        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+          <img class="mr-3 imageHeadList" src="{% static 'images/img_logo/logo.png' %}" alt="">
+          <div class="lh-100">
+            <h6 class="mb-0 text-white lh-100">Produtos</h6>
+            <small>...</small>
+          </div>
+        </div>
+        <!-- Formulário -->
+        {% if perms.administrativo.add_produto %}
+        <div class="cadastro shadow-sm">
+          <form action="" method="post">
+            {% csrf_token %} <!-- csrf token para segurença basica-->
+
+            <div class="inputContainer">
+                <input type="text" id="nomeProduto" class="taskName campos" placeholder="Nome" name="nomeProduto" required>
+                <label for="nomeProduto">Nome do produto</label>
+            </div>
+
+            <div class="inputContainer">
+              <input type="text" id="descricaoProduto" class="taskName campos" placeholder="Descrição" name="descricaoProduto" required>
+              <label for="descricaoProduto">Descrição do produto</label>
+            </div>
+
+            <div class="inputContainer half">
+              <input type="text" id="imagemProduto" class="taskName campos" placeholder="Imagem" name="imagemProduto">
+              <label for="imagemProduto">Imagem do produto</label>
+            </div>
+
+            <div class="inputContainer hal right last">
+              <i class="fa fa-caret-down selectArrow"></i>
+              <select id="categoriaProduto" class="taskCategory" name="categoriaProduto">
+                  <option class="disabled" value="1">Escolha uma categoria</option>
+                  {% for categoria in categorias %}
+                      <option class="" value="{{ categoria.id }}" name="{{ categoria.nome }}">{{ categoria.nome }}</option>
+                  {% endfor %}
+              </select>
+              <label for="categoriaProduto">Categoria do produto</label>
+            </div>
+            
+            <div class="row">
+                <button class="taskAdd" name="taskAddProduto" type="submit"><i class="fa fa-plus icon"></i>Add</button>
+            </div>
+          </form>
+        </div>
+        {% endif %}
+        <!-- Formulário -->
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+          <h6 class="border-bottom border-gray pb-2 mb-0">Produtos cadastrados</h6>
+          <form action="" method="post">
+          {% csrf_token %} <!-- csrf token para segurença basica-->
+          {% if perms.administrativo.delete_produto %}
+          <button class="taskDelete" name="taskDeleteProduto" type="submit" formnovalidate="" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Excluir</button>
+          {% endif %}
+          {% for produto in produtos %}
+          <div class="media text-muted pt-3">
+            {% if perms.administrativo.delete_produto %}
+            <input type="checkbox" class="taskCheckbox" name="checkedbox" id="{{ produto.id }}" value="{{ produto.id }}">
+            {% endif %}
+            <a href="{{produto.imagem}}" target="_blank"> <img src="{{produto.imagem}}" alt="Imagem Lanche" class="mr-2 rounded imageList"> </a>
+            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+              <strong class="d-block text-gray-dark"><label for="{{ produto.id }}">{{ produto.id }} - {{ produto.nome }}</label></strong>
+              <strong class="taskDate">Categoria: </strong><i class="">{{ produto.categoria }}</i></br>
+              <spam class="category-{{ produto.descricao }}"><strong class="taskDate">Descrição: </strong> <i class="">{{ produto.descricao }}</i></spam>
+            </p>
+          </div>
+          {% endfor %}
+          {% if perms.administrativo.delete_produto %}
+          <button class="taskDelete" name="taskDeleteProduto" type="submit" formnovalidate="" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Excluir</button>
+          {% endif %}
+          </form>
+          <small class="d-block text-right mt-3">
+            <!-- <a href="#">All updates</a> -->
+          </small>
+        </div>
+      </div>
+
+      <!--Promocoes-->
+      <div class="produtosRight">
+        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+          <img class="mr-3 imageHeadList" src="{% static 'images/img_logo/logo.png' %}" alt="">
+          <div class="lh-100">
+            <h6 class="mb-0 text-white lh-100">Promoções</h6>
+            <small>...</small>
+          </div>
+        </div>
+
+        <!-- Formulário -->
+        {% if perms.administrativo.add_promocao %}
+        <div class="cadastro shadow-sm">
+          <form action="" method="post">
+            {% csrf_token %} <!-- csrf token para segurença basica-->
+
+            <div class="inputContainer">
+                <i class="fa fa-caret-down selectArrow"></i>
+                <select id="prodPromo" class="taskCategory" name="prodPromo">
+                  <option class="disabled" value="">Escolha um produto</option>
+                  {% for produto in produtos %}
+                      <option class="" value="{{ produto.id }}" name="{{ produto.nome }}">{{ produto.id }} - {{ produto.nome }}</option>
+                  {% endfor %}
+              </select>
+                <label for="prodPromo">Nome do produto</label>
+            </div>
+
+            <div class="inputContainer half">
+              <i class="fa fa-caret-down selectArrow"></i>
+                <select id="lojaPromo" class="taskCategory" name="lojaPromo">
+                  <option class="disabled" value="1">Escolha a loja</option>
+                  {% for loja in lojas %}
+                      <option class="" value="{{ loja.id }}" name="{{ loja.nome }}">{{ loja.id }} - {{ loja.nome }}</option>
+                  {% endfor %}
+              </select>
+              <label for="lojaPromo">Nome da loja</label>
+            </div>
+
+            <div class="inputContainer hal right">
+              <input type="number" step="any" id="precoPromo" class="taskName campos" placeholder="Preço" name="precoPromo">
+              <label for="precoPromo">Preço promocional</label>
+            </div>
+
+            <div class="inputContainer half">
+              <input type="text" id="cupomPromo" class="taskName campos" placeholder="CUP0000" name="cupomPromo" maxlength="7" minlength="7" style="text-transform:uppercase"required>
+              <label for="cupomPromo">Cupom desconto</label>
+            </div>
+
+            <div class="inputContainer hal right">
+              <input type="hidden" name="destaquePromo" value="0" />
+              <label for="destaquePromo">Destaque &nbsp; <input type="checkbox" id="destaquePromo" name="destaquePromo" value="1"><!--<input type="checkbox" id="destaquePromo" class="taskName campos" name="destaquePromo" value={{promocoes.destaque}}>--></label>
+            </div>
+
+            <div class="row">
+                <button class="taskAdd" name="taskAddPromocao" type="submit"><i class="fa fa-plus icon"></i>Add</button>
+            </div>
+          </form>
+        </div>
+        {% endif %}
+        <!-- Formulário -->
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+          <h6 class="border-bottom border-gray pb-2 mb-0">Promoções cadastradas</h6>
+          <form action="" method="post">
+          {% csrf_token %} <!-- csrf token para segurença basica-->
+          {% if perms.administrativo.delete_promocao %}
+          <button class="taskDelete" name="taskDeletePromocao" type="submit" formnovalidate="" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Excluir</button>
+          {% endif %}
+          {% for promocao in promocoes %}
+          <div class="media text-muted pt-3">
+            {% if perms.administrativo.delete_promocao %}
+            <input type="checkbox" class="taskCheckbox" name="checkedbox" id="{{ promocao.id }}" value="{{ promocao.id }}">
+            {% endif %}
+            <a href="{{promocao.produto.imagem}}" target="_blank"> <img src="{{promocao.produto.imagem}}" alt={{promocao.produto.descricao}} class="mr-2 rounded imageList"> </a>
+            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark"><label for="{{ promocao.id }}">{{ promocao.id }} - {{ promocao.produto }} (ref: {{promocao.produto.id}})</label></strong>
+                <strong class="taskDate">Preço </strong><i class="">R${{ promocao.preco }}</i></br>
+                <spam class=""><strong class="taskDate">Loja: </strong> <i class="">{{ promocao.loja }}</i>{% if promocao.destaque == 1 %} - Em destaque {% endif %}</spam>
+              <div class="promoCupom upper">
+                {{ promocao.cupom }}
+              </div>
+              
+            </p>
+          </div>
+          {% endfor %}
+          {% if perms.administrativo.delete_promocao %}
+          <button class="taskDelete" name="taskDeletePromocao" type="submit" formnovalidate="" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Excluir</button>
+          {% endif %}
+          </form>
+          
+          <small class="d-block text-right mt-3">
+            <!-- <a href="#">All updates</a> -->
+          </small>
+        </div>
+      </div>
+  </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com.br/dist/js/bootstrap.min.js"></script>
+    <script src="https://getbootstrap.com.br/docs/4.1/assets/js/vendor/holder.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+  
+  </body>
+</html>

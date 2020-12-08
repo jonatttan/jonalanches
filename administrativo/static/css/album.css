@@ -1,0 +1,125 @@
+:root {
+  --jumbotron-padding-y: 3rem;
+}
+
+.jumbotron {
+  padding-top: var(--jumbotron-padding-y);
+  padding-bottom: var(--jumbotron-padding-y);
+  margin-bottom: 0;
+  background-color: #fff;
+}
+
+@media (min-width: 768px) {
+  .jumbotron {
+    padding-top: calc(var(--jumbotron-padding-y) * 2);
+    padding-bottom: calc(var(--jumbotron-padding-y) * 2);
+  }
+}
+
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron-heading {
+  font-weight: 300;
+
+  font-weight: bolder;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+
+.divImgAlbum {
+  width: 100%;
+  height: 300px;
+}
+.imgAlbum {
+  align-self: center;
+  padding: 2%;
+}
+
+.menuFiltros {
+  /*background: rgb(243, 145, 145);
+  border: black;*/
+  border-style: double;
+  /*width: 350px;*/
+  width: 400px;
+  height: 50px;
+  position: absolute;
+  right: 2%;
+}
+
+.campos[type="number"], [type="text"], select {
+  width: 25%;
+  height: 20px;
+  padding: 0 20px;
+  position: absolute;
+  /*bottom: 0;*/
+  vertical-align: middle;
+  display: inline-block;
+  border: none;
+  border-radius: none;
+  font-size: 13px;
+  color: #777;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  -webkit-transition: background 0.3s;
+  transition: background 0.3s;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  background: lightcyan;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  top: 25%;
+}
+
+.selectArrow {
+  position: absolute;
+  z-index: 10;
+  top: 35%;
+  right: 0;
+  margin-right: 20px;
+  pointer-events: none;
+}
+
+.input1 {
+  right: 0%;
+}
+.input2 {
+  right: 31%;
+}
+.input3 {
+  right: 62%;
+}
+.inputOrdena {
+  padding: 0;
+  margin: 0;
+  bottom: 1px;
+  left: 30%;
+  width: 80px;
+  position: absolute;
+}
+.input4 {
+  left: 0;
+  bottom: 0px;
+}
+.divButton {
+  padding-top: 5px;
+  left: 0;
+  width: 40px;
+  height: 0px;
+}
